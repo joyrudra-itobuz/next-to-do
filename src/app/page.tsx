@@ -8,6 +8,12 @@ async function toggleStatus(id: string, isComplete: boolean) {
   await prisma.toDo.update({ where: { id }, data: { isComplete } });
 }
 
+async function handleDelete(id: string) {
+  "use server";
+
+  await prisma.toDo.delete({ where: { id } });
+}
+
 export default async function Home() {
   const toDos = await prisma.toDo.findMany();
 
@@ -26,7 +32,12 @@ export default async function Home() {
       <ul className="flex flex-col gap-3">
         {toDos.map((toDo) => {
           return (
-            <ToDoItems key={toDo.id} {...toDo} toggleStatus={toggleStatus} />
+            <ToDoItems
+              key={toDo.id}
+              {...toDo}
+              toggleStatus={toggleStatus}
+              handleDelete={handleDelete}
+            />
           );
         })}
       </ul>
